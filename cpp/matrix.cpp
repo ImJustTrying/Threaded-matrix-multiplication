@@ -1,3 +1,10 @@
+/*
+ * Kevin Vicente
+ * April 2022
+ *
+ * Implementations for the methods of the Matrix class.
+ */
+
 #include <chrono>
 #include <random>
 #include <vector>
@@ -8,9 +15,9 @@
 
 Matrix::Matrix(unsigned h, unsigned w) {
     // allocate memory
-    matrix = new float*[h];
+    this->matrix = new float*[h];
     for (unsigned i = 0; i < h; i += 1){ 
-        matrix[i] = new float[w];
+        this->matrix[i] = new float[w];
     }
 
     // randomize entries
@@ -19,7 +26,7 @@ Matrix::Matrix(unsigned h, unsigned w) {
     std::uniform_int_distribution<int> dist(0, w);
     for (unsigned i = 0; i < h; i += 1) {
         for (unsigned j = 0; j < w; j += 1) {
-            matrix[i][j] = (float)dist(generator);
+            this->matrix[i][j] = (float)dist(generator);
         }
     }
     this->h = h;
@@ -29,22 +36,40 @@ Matrix::Matrix(unsigned h, unsigned w) {
 Matrix::~Matrix() {
     // deallocate every row, then the pointer array
     for (unsigned i = 0; i < h; i += 1) {
-        delete[] matrix[i];
+        delete[] this->matrix[i];
     }
-    delete[] matrix;
+    delete[] this->matrix;
 }
 
 
 unsigned Matrix::get_height() {
-    return h;
+    return this->h;
 }
 
 unsigned Matrix::get_width() {
-    return w;
+    return this->w;
 }
 
 float* Matrix::operator[](size_t i) {
-    return matrix[i];
+    return this->matrix[i];
+}
+
+bool Matrix::operator==(Matrix& m) {
+    if (this->w != m.w || this->h != m.h) {
+        return false;
+    }
+    for (unsigned i = 0; i < this->h; i += 1) {
+        for (unsigned j = 0; j < this->w; j += 1) {
+            if (this->matrix[i][j] != m[i][j]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool Matrix::operator!=(Matrix& m) {
+    return !((*this) == m);
 }
 
 void Matrix::nonthreaded_multiply(Matrix& mat, Matrix& res) {

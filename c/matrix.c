@@ -1,24 +1,19 @@
+/*
+ * Kevin Vicente
+ * April 2022
+ *
+ * Implementation of structures & functions defined in matrix.h.
+ * Of note: the matrix height `h` is the number of *rows*, `w` is the number of *columns*.
+ * 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
 #include <stdbool.h>
 
-
-typedef struct matrix {
-    float** data;
-    unsigned h;
-    unsigned w;
-} matrix;
-
-struct thread_job_args {
-    matrix* mat1;
-    matrix* mat2;
-    matrix* res;
-    unsigned row_min;
-    unsigned row_max;
-};
-
+#include "matrix.h"
 
 // allocate memory for NxN matrix
 matrix* allocate_matrix(unsigned h, unsigned w) {
@@ -52,7 +47,7 @@ void generate_entries(matrix* m) {
 }
 
 // compute mat1 x mat2 and store the result in the matrix res
-bool nothread_multiply(matrix* m1, matrix* m2, matrix* res) {
+bool nonthreaded_multiply(matrix* m1, matrix* m2, matrix* res) {
     if (m1->w != m2->h) {
         return false;
     }
@@ -101,6 +96,8 @@ bool threaded_multiply(matrix* m1, matrix* m2, matrix* res, unsigned num_threads
             row_max += 1;
         }
         last_row_max = row_max;
+
+        // allocate and populate structure for arguments to muliply_row_range
         struct thread_job_args* arg = (struct thread_job_args*)malloc(sizeof(struct thread_job_args));
         arg->mat1 = m1;
         arg->mat2 = m2;
@@ -116,4 +113,5 @@ bool threaded_multiply(matrix* m1, matrix* m2, matrix* res, unsigned num_threads
     }
 
     free(thread_handles);
+    return true;
 }

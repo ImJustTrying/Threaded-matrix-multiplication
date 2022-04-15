@@ -1,10 +1,11 @@
 /*
  * Kevin Vicente
+ * April 2022
  *
  * A multithreaded program for multiplying 2 matrices.
  * Given the number of threads and dimension of the matrices, measure the time to multiply them
  * using both non-threaded and threaded procedures.
- * the left matrix is N x M and the right matrix is L x N
+ * the left matrix is N x M and the right matrix is M x L, thus the resulting matrix is N x L
  */
 
 #include <stdio.h>
@@ -22,9 +23,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // This is a linux/macOS exclusive line. Credit:
+    // This line is for linux/macOS only. Credit:
     // https://stackoverflow.com/questions/150355/programmatically-find-the-number-of-cores-on-a-machine
     const unsigned MAX_THREADS = (unsigned)sysconf(_SC_NPROCESSORS_ONLN);
+
     const unsigned N = atoi(argv[2]);
     const unsigned M = atoi(argv[3]);
     const unsigned L = atoi(argv[4]);
@@ -43,7 +45,7 @@ int main(int argc, char* argv[]) {
     
     // take no-thread and threaded products, compare time differences
     clock_t current_time = clock();
-    nothread_multiply(matrix1, matrix2, product);
+    nonthreaded_multiply(matrix1, matrix2, product);
     float delta_t = (float)(clock() - current_time) / CLOCKS_PER_SEC * 1.0e3;
     printf("Time for no-thread product: %f milliseconds\n", delta_t);
 

@@ -1,10 +1,11 @@
 /*
  * Kevin Vicente
+ * April 2022
  *
  * A multithreaded program for multiplying 2 matrices.
  * Given the number of threads and dimension of the matrices, measure the time to multiply them
  * using both non-threaded and threaded procedures.
- * the left matrix is N x M and the right matrix is L x N
+ * The left matrix is N x M and the right matrix is M x L.
  */
 
 #include <iostream>
